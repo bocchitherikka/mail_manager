@@ -1,15 +1,32 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from django.contrib.auth import get_user_model
 
-User = get_user_model()
+User = 'auth.User'
 
 
-class Subscription(models.Model):
-    subscriber = models.EmailField()
-    author = models.ForeignKey(
+class Subscriber(models.Model):
+    name = models.CharField(
+        max_length=32
+    )
+    surname = models.CharField(
+        max_length=32
+    )
+    email = models.EmailField()
+    birth_date = models.DateField()
+
+
+class Newsletter(models.Model):
+    name = models.CharField(
+        max_length=32
+    )
+    content = models.TextField()
+    subscribers = models.ManyToManyField(
+        Subscriber,
+        blank=True
+    )
+    owner = models.ForeignKey(
         User,
-        related_name='subs',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='newsletters'
     )

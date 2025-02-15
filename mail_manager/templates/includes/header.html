@@ -1,0 +1,68 @@
+{% load static %}
+<header class="header bg-secondary">
+  <nav class="navbar navbar-light" style="font-weight:bold">
+    <div class="container">
+      <a class="navbar-brand" href="">
+        <span style="font-size:26px; font-family: monospace; vertical-align: middle"><b>MAIL MANAGER</b></span>
+      </a>
+      <ul class="nav nav-pills">
+        {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link text-white
+               {% if False %}
+                active
+               {% endif %}
+               "
+               href=""
+            >
+              Ваши таски
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white
+               {% if False %}
+                active
+               {% endif %}
+               "
+               href=""
+            >
+              Новая таска
+            </a>
+          </li>
+          <li class="nav-item">
+            <form method="POST" action="" style="display:inline;">
+              {% csrf_token %}
+              <button class="btn btn-link nav-link text-white" style="background:none; border:none; cursor:pointer;">
+                Выйти
+              </button>
+            </form>
+          </li>
+          <li>
+            <a class="nav-link text-white"
+               href=""
+            >
+              Профиль {{ request.user.username }}
+            </a>
+          </li>
+        {% else %}
+          {% if request.resolver_match.view_name == 'perepisat' %}
+            <li class="nav-item">
+              <a class="nav-link text-white" href="">Еще нет аккауанта? Регистрация</a>
+            </li>
+          {% elif request.resolver_match.view_name == 'perepisat' %}
+            <li class="nav-item">
+              <a class="nav-link text-white" href="">Уже зарегистированы? Войти</a>
+            </li>
+          {% else %}
+            <li>
+              <a class="nav-link text-white" href="">Войти</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="">Регистрация</a>
+            </li>
+          {% endif %}
+        {% endif %}
+      </ul>
+    </div>
+  </nav>
+</header>
