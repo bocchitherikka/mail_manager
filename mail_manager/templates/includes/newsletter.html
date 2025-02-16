@@ -1,14 +1,23 @@
 {% load static %}
-<div class="col">
-    <a style="text-decoration: none" href="">
-    <div class="card text-center h-100">
-        <div class="card-header bg-primary text-white"><b>newsletter</b></div>
-        <div class="card-body">
-            <p class="card-text">dfgdfgdfgdfgdfgdf sfgdgdfgdfgfd dfgdgdfgdfgfdgd</p>
+{% for newsletter in newsletters %}
+    <div class="col" style="margin-bottom: 20px">
+        <a
+            href="#"
+            style="text-decoration: none"
+            class="edit-newsletter"
+            data-id="{{ newsletter.id }}"
+            data-name="{{ newsletter.name }}"
+            data-content="{{ newsletter.content }}"
+        >
+        <div class="card text-center h-100">
+            <div class="card-header bg-primary text-white"><b>{{ newsletter.name }} (id:{{ newsletter.id }})</b></div>
+            <div class="card-body">
+                <p class="card-text">{{ newsletter.content|truncatechars:100 }}</p>
+            </div>
+            <div class="card-footer">
+                Нажмите для редактирования
+            </div>
         </div>
-        <div class="card-footer">
-            lflf
-        </div>
+        </a>
     </div>
-    </a>
-</div>
+{% endfor %}

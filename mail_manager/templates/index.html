@@ -3,10 +3,81 @@
 {% block title %}Ваши рассылки{% endblock title %}
 {% block body %}
 <div class="container mt-4">
-  <div class="row row-cols-1 row-cols-md-3 g-4">
-    {% for newsletter in newsletters %}
-      {% include 'templates/includes/newsletter.html' %}
-    {% endfor %}
+  <button style="margin-right: 10px" class="btn btn-primary btn-newsletter" data-bs-toggle="modal" data-bs-target="#newsletterModal">
+    Создать рассылку
+  </button>
+  <div class="modal fade" id="newsletterModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="newsletterModalTitle">Создать рассылку</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="newsletterForm">
+            {% csrf_token %}
+            <input type="hidden" id="newsletterId" name="id">
+            <div class="form-group">
+              <label for="name">Название</label>
+              <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+              <label for="content">Содержимое</label>
+              <textarea class="form-control" id="content" name="content" rows="15" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-success" id="newsletterSubmitBtn">Создать</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="btn btn-primary btn-subscriber" data-bs-toggle="modal" data-bs-target="#subscriberModal">
+    Добавить подписчика
+  </button>
+  <div class="modal fade" id="subscriberModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Добавить подписчика</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="subscriberForm">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="sub_name">Имя</label>
+              <input type="text" class="form-control" id="sub_name" name="sub_name" required>
+            </div>
+            <div class="form-group">
+              <label for="sub_surname">Фамилия</label>
+              <input type="text" class="form-control" id="sub_surname" name="sub_surname" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Адрес электронной почты</label>
+              <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label for="birth_date">День рождения</label>
+              <input type="date" class="form-control" id="birth_date" name="birth_date" required>
+            </div>
+            <div class="form-group">
+              <label for="newsletter_id">ID Рассылки</label>
+              <input type="text" class="form-control" id="newsletter_id" name="newsletter_id" required>
+            </div>
+            <button type="submit" class="btn btn-success">Добавить</button>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+<div class="container mt-4">
+  <div id="newslettersContainer" class="row row-cols-1 row-cols-md-3 g-4"></div>
+</div>
+<script src="{% static 'scripts/newsletter.js' %}"></script>
+<script src="{% static 'scripts/subscriber.js' %}"></script>
 {% endblock body %}

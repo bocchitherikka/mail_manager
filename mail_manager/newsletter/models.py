@@ -12,13 +12,17 @@ class Subscriber(models.Model):
     surname = models.CharField(
         max_length=32
     )
-    email = models.EmailField()
+    email = models.EmailField(
+        unique=True,
+        db_index=True
+    )
     birth_date = models.DateField()
 
 
 class Newsletter(models.Model):
     name = models.CharField(
-        max_length=32
+        max_length=32,
+        db_index=True
     )
     content = models.TextField()
     subscribers = models.ManyToManyField(
