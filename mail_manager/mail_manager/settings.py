@@ -99,6 +99,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, STATIC_URL),
 ]
 
+BROKER_URL = "amqp://guest:guest@rabbitmq:5672//"
 CELERY_BROKER_URL = 'pyamqp://guest:guest@localhost//'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
