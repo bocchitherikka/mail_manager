@@ -1,8 +1,13 @@
+from celery import shared_task
+from datetime import datetime
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.core import serializers
+from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
+from django.template import Template, Context
 from django.template.loader import render_to_string
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import User, Newsletter, Subscriber
@@ -112,6 +117,12 @@ def add_subscriber(request):
         return JsonResponse({
             "message": "Successfully added new subscriber!"
         })
+    return JsonResponse(
+        {
+            "error": request.method + " method not allowed!"
+        },
+        status=400
+    )
 
 
 @login_required
@@ -120,3 +131,67 @@ def is_newsletter_exists(request, newsletter_id):
     return JsonResponse({
         "exists": exists
     })
+
+
+@shared_task
+def send_email_task(subject, template, context, recipient):
+    template = Template(template)
+    context = Context(context)
+    html_message = template.render(context)
+    send_mail(
+        subject,
+        ' ',
+        settings.EMAIL_HOST_USER,
+        [recipient],
+        html_message=html_message
+    )
+
+
+def send_group_email(
+        subject,
+        template,
+        recipient_list,
+        countdown,
+        eta
+):
+    for recipient in recipient_list:
+        context = {
+            "name": recipient.name,
+            "surname": recipient.surname,
+            "birth_date": recipient.birth_date.strftime('%Y-%m-%d')
+        }
+        email = recipient.email
+        send_email_task.apply_async(
+            args=[subject, template, context, email],
+            countdown=countdown,
+            eta=eta
+        )
+
+
+@login_required
+@csrf_exempt
+def launch_newsletter(request):
+    if request.method == 'POST':
+        newsletter_id = request.POST.get('newsletter_to_start_id')
+        eta = request.POST.get('eta')
+        countdown = request.POST.get('countdown')
+        newsletter = get_object_or_404(
+            Newsletter.objects.prefetch_related('subscribers'),
+            id=newsletter_id
+        )
+        send_group_email(
+            newsletter.name,
+            newsletter.content,
+            list(newsletter.subscribers.all()),
+            int(countdown) if countdown else 0,
+            datetime.strptime(eta, "%Y-%m-%d") if eta else timezone.now()
+        )
+        return JsonResponse({
+            "message": "Successfully sent"
+        })
+    return JsonResponse(
+        {
+            "error": request.method + " method not allowed!"
+        },
+        status=400
+    )

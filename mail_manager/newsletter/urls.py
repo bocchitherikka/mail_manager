@@ -2,11 +2,12 @@ from django.conf.urls import url
 
 from .views import (
     add_subscriber,
-    is_newsletter_exists,
     create_newsletter,
     edit_newsletter,
     get_newsletters,
-    index
+    index,
+    is_newsletter_exists,
+    launch_newsletter
 )
 
 app_name = 'newsletter'
@@ -41,5 +42,10 @@ urlpatterns = [
         r'^add_subscriber/$',
         add_subscriber,
         name='add_subscriber'
-    )
+    ),
+    url(
+        r'^launch/$',
+        launch_newsletter,
+        name='launch'
+    ),
 ]

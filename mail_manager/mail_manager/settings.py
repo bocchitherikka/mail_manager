@@ -1,6 +1,9 @@
+from dotenv import load_dotenv
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+load_dotenv(dotenv_path=os.path.join(BASE_DIR, '.env'))
 
 SECRET_KEY = 'django-insecure-b+u-r8q!rn3sh=y4z42m1789tkd(rz9zj9$_oms4yh#!%=e-b8'
 
@@ -95,3 +98,14 @@ STATIC_URL = os.path.join(BASE_DIR, 'static/')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, STATIC_URL),
 ]
+
+CELERY_BROKER_URL = 'pyamqp://guest:guest@localhost//'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')

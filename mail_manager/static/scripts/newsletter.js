@@ -9,6 +9,16 @@ $(document).ready(function () {
 
     loadNewsletters();
 
+    function initCKEditor() {
+        CKEDITOR.replace("content");
+    }
+
+    function destroyCKEditor() {
+        if (CKEDITOR.instances["content"]) {
+            CKEDITOR.instances["content"].destroy(true);
+        }
+    }
+
     $(document).on("click", ".edit-newsletter", function () {
         var id = $(this).data("id");
         var name = $(this).data("name");
@@ -17,9 +27,11 @@ $(document).ready(function () {
         $("#newsletterModalTitle").text("Редактировать рассылку");
         $("#newsletterId").val(id);
         $("#name").val(name);
-        $("#content").val(content);
-        $("#newsletterSubmitBtn").text("Сохранить");
+        destroyCKEditor();
+        initCKEditor();
+        CKEDITOR.instances["content"].setData(content);
 
+        $("#newsletterSubmitBtn").text("Сохранить");
         $("#newsletterModal").modal("show");
     });
 
@@ -27,9 +39,11 @@ $(document).ready(function () {
         $("#newsletterModalTitle").text("Создать рассылку");
         $("#newsletterId").val("");
         $("#name").val("");
-        $("#content").val("");
-        $("#newsletterSubmitBtn").text("Создать");
+        destroyCKEditor();
+        initCKEditor();
+        CKEDITOR.instances["content"].setData("");
 
+        $("#newsletterSubmitBtn").text("Создать");
         $("#newsletterModal").modal("show");
     });
 
@@ -38,15 +52,18 @@ $(document).ready(function () {
 
         var id = $("#newsletterId").val();
         var url = id ? "edit/" : "create/";
+        var content = CKEDITOR.instances["content"].getData();
 
         $.ajax({
             type: "POST",
             url: url,
-            data: $(this).serialize(),
+            data: $(this).serialize() + "&content=" + encodeURIComponent(content),
             success: function (response) {
                 alert(id ? "Рассылка обновлена!" : "Рассылка создана!");
                 $("#newsletterModal").modal("hide");
                 $("#newsletterForm")[0].reset();
+                destroyCKEditor();
+                initCKEditor();
                 loadNewsletters();
             },
             error: function () {
