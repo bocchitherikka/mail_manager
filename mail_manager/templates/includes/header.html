@@ -6,5 +6,21 @@
         <span style="font-size:26px; font-family: monospace; vertical-align: middle"><b>MAIL MANAGER</b></span>
       </a>
     </div>
+    <ul class="nav nav-pills">
+    {% if request.user.is_authenticated %}
+      <li class="nav-item">
+        <a class="nav-link link-light text-white" href="{% url 'accounts:logout' %}">Выйти</a>
+      </li>
+    {% endif %}
+    {% if request.resolver_match.view_name == 'accounts:login' %}
+      <li class="nav-item">
+        <a class="nav-link link-light text-white" href="{% url 'accounts:register' %}">Регистрация</a>
+      </li>
+    {% elif request.resolver_match.view_name == 'accounts:register' %}
+      <li class="nav-item">
+        <a class="nav-link link-light text-white" href="{% url 'accounts:login' %}">Войти</a>
+      </li>
+    {% endif %}
+    </ul>
   </nav>
 </header>
