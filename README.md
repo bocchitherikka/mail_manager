@@ -3,7 +3,7 @@
 ###
 Клонируйте репозиторий:
 ```
-https://github.com/bocchitherikka/mail_manager.git
+git clone https://github.com/bocchitherikka/mail_manager.git
 ```
 ###
 Перейдите в корневой репозиторий:
