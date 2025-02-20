@@ -24,9 +24,16 @@ EMAIL_HOST_PASSWORD = "app password"
 Запустите докер-контейнеры и настройте их:
 ```
 docker-compose up -d
+
+# Я не знаю почему так, но на этом моменте создается ПАПКА
+# вместо бд. Не выключая контейнеры, удалите ее вручную,
+# после чего выполняйте следующее:
+
 docker-compose exec web python manage.py migrate
 docker-compose exec web python manage.py collectstatic
+
 # Перезапустите. На всякий случай.
+
 docker-compose down
 docker-compose up -d
 ```
